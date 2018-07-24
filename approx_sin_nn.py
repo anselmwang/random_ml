@@ -6,7 +6,6 @@ from torch.autograd import Variable
 import torch.nn as nn
 import torch.nn.functional as F
 import torch.optim as optim
-
 import torch.utils.data as data
 import skorch
 import skorch.net
@@ -99,7 +98,6 @@ nn_model = skorch.net.NeuralNetRegressor(
     max_epochs=2000,
     lr=0.5,
     batch_size=4,
-    #train_split=None,
 )
 eval(nn_model, "NN")
 print(time.clock()-start)
