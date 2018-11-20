@@ -2,3 +2,5 @@
 test_torch/skip-gram-pytorch/tmp/
 test_torch/skip-gram-pytorch/__pycache__/
 test_torch/.ipynb_checkpoints/
+__pycache__/
+test_torch/runs/
