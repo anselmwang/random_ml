@@ -5,9 +5,9 @@ import matplotlib.pyplot as plt
 matplotlib.rcParams.update({'font.size': 22})
 
 def f(x):
-    # y = np.log(x)
-    # y[np.isnan(y)] = -1.
-    y = (x > 0).astype(float)
+    y = np.log(x)
+    y[np.isnan(y)] = -1.
+    # y = (x > 0).astype(float)
     return y
 
 import torch

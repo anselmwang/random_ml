@@ -1,6 +1,6 @@
 import numpy as np
 def f(x, y):
-    return x ** 2
+    return np.sin(x) + np.cos(y)
 
 import torch
 import torch.nn as nn
