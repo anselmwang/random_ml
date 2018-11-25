@@ -1,6 +1,6 @@
 import numpy as np
 def f(x, y):
-    return np.sin(x) + np.cos(y)
+    return (x + y) % 26
 
 import torch
 import torch.nn as nn
@@ -19,8 +19,11 @@ class Net(nn.Module):
 
 net = Net()
 
-x = np.linspace(-5, 5, 50)
-y = np.linspace(-5, 5, 50)
+N_POINT = 50
+# x = np.linspace(-5, 5, 50)
+# y = np.linspace(-5, 5, 50)
+x = np.linspace(0, 25, N_POINT)
+y = np.linspace(0, 25, N_POINT)
 x, y = np.meshgrid(x, y)
 output = f(x, y)
 
@@ -42,10 +45,10 @@ from mpl_toolkits.mplot3d import Axes3D
 fig = plt.figure()
 ax = fig.add_subplot(111, projection='3d')
 # ax.plot_surface(x, y, output, label="orig")
-# ax.plot_surface(x, y, net(t_input).detach().numpy().reshape(50, 50), label="fit")
+# ax.plot_surface(x, y, net(t_input).detach().numpy().reshape(N_POINT, N_POINT), label="fit")
 
 #ax.plot_wireframe(x, y, output, color="red", label="orig")
-ax.plot_wireframe(x, y, net(t_input).detach().numpy().reshape(50, 50), color="green", label="fit")
+ax.plot_wireframe(x, y, net(t_input).detach().numpy().reshape(N_POINT, N_POINT), color="green", label="fit")
 
 #plt.legend()
 plt.xlabel("x")

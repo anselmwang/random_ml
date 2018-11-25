@@ -7,7 +7,8 @@ matplotlib.rcParams.update({'font.size': 22})
 def f(x):
     #y = np.log(x)
     #y[np.isnan(y)] = -1.
-    y = (x > 0).astype(float)
+    #y = (x > 0).astype(float)
+    y = np.sin(x)
     return y
 
 import torch
@@ -15,7 +16,7 @@ import torch.nn as nn
 import torch.optim as optim
 
 N_HID = 30
-N_EPOCH = 6000
+N_EPOCH = 2000
 
 class Net(nn.Module):
     def __init__(self):
@@ -28,7 +29,7 @@ class Net(nn.Module):
 
 net = Net()
 
-x = np.linspace(-5, 5, 50)
+x = np.linspace(-5, 5, 5)
 output = f(x)
 
 t_input = torch.tensor(x, dtype=torch.float32).view(-1, 1)
