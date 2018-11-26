@@ -8,7 +8,7 @@ import torch.nn as nn
 import torch.optim as optim
 
 N_SYMBOL = 26
-N_EMB_DIM = 10
+N_EMB_DIM = 60
 N_EPOCH = 1000
 class Net(nn.Module):
     def __init__(self):

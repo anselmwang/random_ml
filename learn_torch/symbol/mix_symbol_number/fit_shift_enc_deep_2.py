@@ -8,8 +8,8 @@ import torch.nn as nn
 import torch.optim as optim
 
 N_SYMBOL = 26
-N_EMB_DIM = 10
-N_DELTA_HID_DIM = 10
+N_EMB_DIM = 20
+N_DELTA_HID_DIM = 20
 N_TRANSFORM_LAYER = 2
 N_EPOCH = 10000
 class Net(nn.Module):

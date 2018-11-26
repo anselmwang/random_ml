@@ -12,12 +12,11 @@ import torch.optim as optim
 class Net(nn.Module):
     def __init__(self):
         super(Net, self).__init__()
-        self.dense_a = nn.Linear(N_SYMBOL, N_HID)
-        self.dense_b = nn.Linear(N_SYMBOL, N_HID)
+        self.emb = nn.Embedding(N_SYMBOL, N_HID)
         self.output = nn.Linear(N_HID, 1)
 
     def forward(self, a, b):
-        final_input = torch.relu(self.dense_a(a) + self.dense_b(b))
+        final_input = torch.relu(self.emb(a) + self.emb(b))
         return self.output(final_input)
 
 
@@ -41,16 +40,10 @@ input_a, input_a_test, input_b, input_b_test, output, output_test = model_select
                                                                                                      random_state=0,
                                                                                                      shuffle=True)
 
-
-def one_hot(input):
-    t_input = torch.zeros(len(input), N_SYMBOL, dtype=torch.float32)
-    t_input.scatter_(1, torch.tensor(input, dtype=torch.long).reshape(-1, 1), 1.)
-    return t_input
-
-t_input_a = one_hot(input_a)
-t_input_a_test = one_hot(input_a_test)
-t_input_b = one_hot(input_b)
-t_input_b_test = one_hot(input_b_test)
+t_input_a = torch.LongTensor(input_a)
+t_input_a_test = torch.LongTensor(input_a_test)
+t_input_b = torch.LongTensor(input_b)
+t_input_b_test = torch.LongTensor(input_b_test)
 t_output = torch.FloatTensor(output).view(-1, 1)
 t_output_test = torch.FloatTensor(output_test).view(-1, 1)
 
