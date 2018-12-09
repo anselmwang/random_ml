@@ -6,10 +6,10 @@ import random
 import numpy as np
 import time
 
-N_EPOCH = 200
+N_EPOCH = 1000
 MAX_LEN = 3
 MAX_NUM = 999
-TEST_SIZE = 0.5
+TEST_SIZE = 0.2
 # BATCH_SIZE = int((MAX_NUM + 1) * TEST_SIZE)
 BATCH_SIZE = 10
 SEED = 42
@@ -137,16 +137,15 @@ plt.show()
 
 
 
-
-
-tmp_x = []
-#for i in range(500, 800):
-for i in range(0, 999, 10):
-    tmp_x.append([int(c) + 1 for c in str(i)] + [0] * (MAX_LEN - len(str(i))))
-tmp_x = np.asarray(tmp_x)
-t_tmp_x = torch.LongTensor(tmp_x)
-hidden = net(t_tmp_x, None, len(t_tmp_x), return_hidden=True)
-
-plt.matshow(hidden.detach().numpy())
-plt.colorbar()
-plt.show()
+# # understand hidden state
+#
+# tmp_x = []
+# for i in range(0, 999, 10):
+#     tmp_x.append([int(c) + 1 for c in str(i)] + [0] * (MAX_LEN - len(str(i))))
+# tmp_x = np.asarray(tmp_x)
+# t_tmp_x = torch.LongTensor(tmp_x)
+# hidden = net(t_tmp_x, None, len(t_tmp_x), return_hidden=True)
+#
+# plt.matshow(hidden.detach().numpy())
+# plt.colorbar()
+# plt.show()
