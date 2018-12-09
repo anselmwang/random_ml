@@ -6,7 +6,7 @@ import random
 import numpy as np
 import time
 
-N_EPOCH = 2000
+N_EPOCH = 200
 MAX_LEN = 3
 MAX_NUM = 999
 TEST_SIZE = 0.5
@@ -32,11 +32,11 @@ class MyLSTM(nn.Module):
         self.n_lstm_dim = n_lstm_dim
 
     def _init_hidden(self, batch_size):
-        hidden_a = torch.randn(1, batch_size, self.n_lstm_dim) # .cuda()
-        hidden_b = torch.randn(1, batch_size, self.n_lstm_dim) # .cuda()
+        hidden_a = torch.zeros(1, batch_size, self.n_lstm_dim)  # .cuda()
+        hidden_b = torch.zeros(1, batch_size, self.n_lstm_dim)  # .cuda()
         return hidden_a, hidden_b
 
-    def forward(self, x, x_lengths, batch_size):
+    def forward(self, x, x_lengths, batch_size, return_hidden=False):
         """ x.shape (batch_size, max_seq_len)"""
 
         """(batch_size, max_seq_len, n_emb_dim)"""
@@ -49,12 +49,15 @@ class MyLSTM(nn.Module):
         # x, _ = torch.nn.utils.rnn.pad_packed_sequence(x, batch_first=True)
 
         """(batch_size, n_lstm_dim)"""
-        x = h_n.contiguous().view(-1, self.n_lstm_dim)
+        final_hid = h_n.contiguous().view(-1, self.n_lstm_dim)
 
         """(batch_size, 1)"""
-        x = self.output(x)
+        x = self.output(final_hid)
 
-        return x.view(batch_size)
+        if not return_hidden:
+            return x.view(batch_size)
+        else:
+            return final_hid
 
 
 x = []
@@ -94,8 +97,8 @@ t_x_lengths_test = torch.LongTensor(x_lengths_test)
 
 net = MyLSTM(n_token=10 + 1,
              token_padding_idx=0,
-             n_emb_dim=20,
-             n_lstm_dim=20) # .cuda()
+             n_emb_dim=40,
+             n_lstm_dim=40) # .cuda()
 
 optimizer = optim.Adam(net.parameters())
 
@@ -109,6 +112,7 @@ loss_history = []
 loss_test_history = []
 start_time = time.time()
 for epoch_no in range(N_EPOCH):
+    train_loss_list = []
     for t_x_batch, t_y_batch, t_x_lengths_batch in train_dataloader:
         net.zero_grad()
         loss = F.mse_loss(net(t_x_batch,
@@ -117,8 +121,9 @@ for epoch_no in range(N_EPOCH):
                           t_y_batch)
         loss.backward()
         optimizer.step()
+        train_loss_list.append(loss.item())
     loss_test = F.mse_loss(net(t_x_test, x_lengths_test, len(t_x_test)), t_y_test)
-    print(epoch_no, loss.item(), loss_test.item())
+    print(epoch_no, np.mean(train_loss_list), loss_test.item())
     loss_history.append(loss.item())
     loss_test_history.append(loss_test.item())
 
@@ -128,4 +133,20 @@ import matplotlib.pyplot as plt
 
 pred_y = net(t_x_test, x_lengths_test, len(t_x_test))
 plt.scatter(t_y_test.cpu(), pred_y.cpu().detach())
+plt.show()
+
+
+
+
+
+tmp_x = []
+#for i in range(500, 800):
+for i in range(0, 999, 10):
+    tmp_x.append([int(c) + 1 for c in str(i)] + [0] * (MAX_LEN - len(str(i))))
+tmp_x = np.asarray(tmp_x)
+t_tmp_x = torch.LongTensor(tmp_x)
+hidden = net(t_tmp_x, None, len(t_tmp_x), return_hidden=True)
+
+plt.matshow(hidden.detach().numpy())
+plt.colorbar()
 plt.show()
